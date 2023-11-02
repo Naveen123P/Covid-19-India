@@ -60,15 +60,15 @@ app.post("/districts/", async (request, response) => {
     INSERT INTO 
         district(district_name, state_id, cases, cured, active, deaths)
     VALUES (
-        ${districtName},
-        ${stateId},
-        ${cases},
-        ${cured},
-        ${active},
-        ${deaths}
+       '${districtName}',
+       ${stateId},
+       ${cases},
+       ${cured},
+       ${active},
+       ${deaths}
         );
     `;
-  const ditInsTable = await db.run(ditInsTable);
+  const ditInsTable = await db.run(postDistrictDetQuary);
   response.send("District Successfully Added");
 });
 
@@ -102,7 +102,7 @@ app.put("/districts/:districtId/", async (request, response) => {
   UPDATE district
   SET 
   (
-      district_name = ${districtName},
+      district_name = '${districtName}',
       state_id =${stateId},
       cases =${cases},
       cured = ${cured},
@@ -133,8 +133,12 @@ app.get("/states/:stateId/stats/", async (request, response) => {
 
 app.get("/districts/:districtId/details/", async (request, response) => {
   const { districtId } = request.params;
+  const { details } = request.params;
   const getDistrictDetailsQuary = `
-    SELECT 
+    SELECT state.state_name as stateName
+    FROM state
+        NATURAL JOIN district
+    WHERE district_id = ${districtId};
     `;
   const stateName = await db.get(getDistrictDetailsQuary);
   response.send(stateName);
