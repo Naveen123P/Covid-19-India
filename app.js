@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
+module.export=app;
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
 const path = require("path");
